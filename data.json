@@ -1,0 +1,133 @@
+{
+  "admins": [
+    {
+      "name": "f.r.o.g.g.i.e",
+      "salt": "0169d8d28c8a",
+      "hash": "b75d2af8222a822c8698840f5b2e1c3649d0054c1cf9a6ad20a582ded785a400",
+      "powers": [
+        "reorder",
+        "edit",
+        "add",
+        "delete",
+        "media"
+      ]
+    }
+  ],
+  "maps": [
+    {
+      "id": "mmvnduhpgxg0w",
+      "name": "Wasted Summer",
+      "by": "By Fitartist334071 & Sox",
+      "played": 9986,
+      "beaten": 1,
+      "time": 34,
+      "cp": null,
+      "diff": 10,
+      "thumb": "https://grab-images.slin.dev/level_2bojjyjkmhegoqt73au7m_1717813551_1_thumb.png",
+      "desc": "After over 1 month, 7 streams, 20+ crashes, and 25+ hours verifying, I finally have a top 1 that deserves its stop at the top…\n\n\nFirst top 1 with a frame perfect btw, will not be the last. \n\nVERIFIED BY FITATIST334071",
+      "extra": [],
+      "video": "https://youtu.be/5_YeuY3gGM8?si=b9dr99LdbghwwQK4"
+    },
+    {
+      "id": "s1",
+      "name": "Crouch 4 a couch",
+      "by": "By Thezra325",
+      "played": 10135,
+      "beaten": 3,
+      "time": 1,
+      "cp": null,
+      "diff": 10,
+      "thumb": "https://grab-images.slin.dev/level_2czbtyaqtbjo89sut7jqd_1768983245_1_thumb.png",
+      "desc": "\"Super fun, super enjoy, great workout\n9.2/10\" - Thezra",
+      "extra": [],
+      "video": "https://youtu.be/6k264eTuFhA?si=62vSzFXUk2x_8NCe"
+    },
+    {
+      "id": "s3",
+      "name": "YH5 - Delayed Gratitude",
+      "by": "FitArtist334071",
+      "played": 4015,
+      "beaten": 2,
+      "time": 4,
+      "cp": null,
+      "diff": 9,
+      "thumb": "https://grab-images.slin.dev/level_2bojjyjkmhegoqt73au7m_1743267679_1_thumb.png",
+      "desc": "There are 10 types of people: ones that undersyand binary, and ones who don't. I hope I win!!!!!!!",
+      "extra": [
+        {
+          "label": "First Beaten by",
+          "value": "FitArtist344071"
+        }
+      ],
+      "video": "https://www.youtube.com/watch?v=P176xa_jS-Y"
+    },
+    {
+      "id": "s2",
+      "name": "Room of Chowder Hater's Torment",
+      "by": "Thezra",
+      "played": 9349,
+      "beaten": 7,
+      "time": 1.5,
+      "cp": null,
+      "diff": 9,
+      "thumb": "https://grab-images.slin.dev/level_2czbtyaqtbjo89sut7jqd_1766276703_1_thumb.png",
+      "desc": "Skill issuers beware made for Blizzy and RCD and Parcee and Alpaca and Klepto",
+      "extra": [
+        {
+          "label": "First Beaten by",
+          "value": "Thezra325"
+        }
+      ],
+      "video": "https://www.youtube.com/watch?v=t0JcWibDaek"
+    }
+  ],
+  "players": [
+    {
+      "id": "mmvnzrzadppjs",
+      "name": "Fitartist334071",
+      "beaten": [
+        "mmvnduhpgxg0w",
+        "s1",
+        "s3",
+        "s2"
+      ]
+    },
+    {
+      "id": "mmvnzsblgvr4j",
+      "name": "Thezra325",
+      "beaten": [
+        "s1",
+        "s2"
+      ]
+    },
+    {
+      "id": "mmvnzsqzgg17w",
+      "name": "RCD24",
+      "beaten": [
+        "s1",
+        "s3",
+        "s2"
+      ]
+    }
+  ],
+  "site": {
+    "title": "Unofficial Grab’s Hardest",
+    "brand": "Grab’s Hardest",
+    "small": "unofficial",
+    "intro": "Grab has a ridiculous number of challenge maps and everybody has a different idea of which one is the worst. This is our list. We look at how many people who tried a map actually beat it, how long it takes, and how many checkpoints it gives you, then argue about the order. Nothing to do with Grab itself.",
+    "foot1": "How difficulty works: each map gets a number out of 10 from three things, how few checkpoints it has, how few players beat it, and how long it takes. A 10/10 would be no checkpoints, an hour or more to beat, and nobody finishing it. The order on the page is still set by hand.",
+    "foot2": "Fan project. The maps and pictures belong to the people who made them, and to Grab.",
+    "playersIntro": "Beat a map, take its points. The harder the map, the more it is worth, so this list shuffles every time someone clears something nasty.",
+    "logo": "",
+    "accent": "",
+    "dwCp": 1,
+    "dwRate": 1,
+    "dwTime": 1,
+    "cpCap": 10,
+    "pointsMult": 1,
+    "sb": {
+      "url": "https://supabase.com/dashboard/project/ccvufvqrqrzwzuzoulac",
+      "key": "sb_publishable_HrmSJPXZfMftXmhuMRRDsg_7ZQjdFqK"
+    }
+  }
+}

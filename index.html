@@ -1,0 +1,966 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Unofficial Grab’s Hardest</title>
+<meta name="description" content="A fan-made ranking of the hardest Best of Grab challenge maps in Grab VR.">
+<script>try{var t=localStorage.getItem("ugh-theme");if(t)document.documentElement.dataset.theme=t}catch(e){}</script>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64' fill='none' stroke='%23f0cf4a' stroke-width='3.5' stroke-linecap='round'%3E%3Crect width='64' height='64' fill='%23202329' stroke='none'/%3E%3Cpath d='M5 41 L20 39 L41 42 L59 38' stroke-width='5'/%3E%3Cpath d='M13 40 C12 29 11 22 15 21 C19 20 20 29 20 39M21 39 C21 25 21 17 25.5 16.5 C30 16 29 26 29 40M30 40 C30 28 30 20 34.5 20 C39 20 38 29 38 41M39 41 C40 32 41 26 45 26.5 C48.5 27 47.5 34 46 42'/%3E%3C/svg%3E">
+<style>
+:root{
+  --bg:#202329; --surface:#2a2d35; --surface2:#353943; --line:#4a4f5c;
+  --text:#f2eee3; --muted:#aaa89f; --accent:#f0cf4a; --accent-ink:#1d1e22;
+  --hot:#ff6a5c; --warm:#f0cf4a; --ok:#58d6a4;
+  --radius:12px 16px 11px 15px;
+}
+@media (prefers-color-scheme: light){
+  :root:not([data-theme=dark]){ --bg:#e9e8e4; --surface:#fbfaf7; --surface2:#dddcd5; --line:#bdbab0; --text:#1d1e22; --muted:#5f5e58; --accent:#a37d00; --accent-ink:#ffffff; }
+}
+:root[data-theme=light]{ --bg:#e9e8e4; --surface:#fbfaf7; --surface2:#dddcd5; --line:#bdbab0; --text:#1d1e22; --muted:#5f5e58; --accent:#a37d00; --accent-ink:#ffffff; color-scheme:light }
+:root[data-theme=dark]{ color-scheme:dark }
+*{box-sizing:border-box}
+html{scroll-padding-top:12px}
+body{margin:0;background:var(--bg);color:var(--text);font:16px/1.5 "Avenir Next","Segoe UI",system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+button,input,textarea,select{font:inherit;color:inherit}
+:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.wrap{max-width:920px;margin:0 auto;padding:0 20px}
+
+header.top{display:flex;justify-content:space-between;align-items:center;padding:18px 0}
+.brand{display:flex;align-items:center;gap:10px;font-weight:800;line-height:1.1}
+.logo{width:42px;height:42px;color:var(--accent);flex:none}
+.brand small{display:block;font-weight:600;font-size:.72rem;color:var(--muted);transform:rotate(-3deg);transform-origin:left}
+.btn{background:var(--surface2);border:1px solid var(--line);border-radius:10px;padding:8px 14px;cursor:pointer;font-weight:600}
+.btn:hover{border-color:var(--accent)}
+.btn.primary{background:var(--accent);color:var(--accent-ink);border-color:transparent}
+.btn.danger{color:var(--hot)}
+.btn.small{padding:4px 10px;font-size:.85rem}
+
+.hero{padding:36px 0 28px}
+h1{font-family:"Arial Black","Helvetica Neue",Impact,sans-serif;font-size:clamp(2.1rem,7vw,4rem);line-height:1;letter-spacing:-.02em;margin:0 0 20px;font-weight:900;max-width:13ch}
+.lede{color:var(--muted);max-width:56ch;margin:0}
+.row:nth-child(even){border-radius:15px 11px 16px 12px}
+.row:nth-child(odd) .rank{transform:rotate(-3deg)}
+.row:nth-child(even) .rank{transform:rotate(2deg)}
+label.chk{display:flex;gap:8px;align-items:center;color:var(--text)}
+label.chk input{width:auto}
+fieldset{border:1px dashed var(--line);border-radius:10px;display:grid;gap:10px;padding:12px;margin:0}
+.arow{display:flex;gap:8px;align-items:center;flex-wrap:wrap;padding:6px 0;border-bottom:1px solid var(--line)}
+.arow .by{flex:1 1 200px}
+code{background:var(--bg);padding:2px 8px;border-radius:6px;font-size:1.05rem;letter-spacing:.04em;user-select:all}
+
+.adminbar{display:none;gap:8px;flex-wrap:wrap;align-items:center;background:var(--surface);border:1px dashed var(--accent);border-radius:var(--radius);padding:12px;margin-bottom:16px}
+body.admin .adminbar{display:flex}
+.adminbar .note{color:var(--muted);font-size:.85rem;flex:1 1 220px}
+
+ol.board{list-style:none;margin:0;padding:0;display:grid;gap:10px}
+.row{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);overflow:hidden}
+.row.dragging{opacity:.4}
+.row.over-top{box-shadow:0 -3px 0 var(--accent)}
+.row.over-bottom{box-shadow:0 3px 0 var(--accent)}
+.main{display:grid;grid-template-columns:64px 112px 1fr auto;gap:14px;align-items:center;padding:12px 14px;cursor:pointer;width:100%;background:none;border:0;text-align:left}
+.rank{font-size:2.4rem;font-weight:850;letter-spacing:-.04em;text-align:center;color:var(--muted);font-variant-numeric:tabular-nums}
+.row:nth-child(-n+3) .rank{color:var(--text)}
+.thumb{width:112px;height:64px;border-radius:10px;background:var(--surface2) center/cover no-repeat;border:1px solid var(--line)}
+.name{font-weight:750;font-size:1.15rem;line-height:1.2}
+.by{color:var(--muted);font-size:.88rem}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
+.chip{background:var(--surface2);border-radius:8px;padding:2px 9px;font-size:.82rem;color:var(--muted)}
+.chip b{color:var(--text);font-weight:700}
+.meter{display:flex;gap:3px;align-items:flex-end;height:30px}
+.meter i{width:6px;border-radius:2px;background:var(--line)}
+.meter i.on{background:var(--warm)}
+.meter i.on.hi{background:var(--hot)}
+.details{display:none;border-top:1px solid var(--line);padding:16px 18px 18px;gap:14px}
+.row.open .details{display:grid}
+.details p{margin:0;max-width:70ch;white-space:pre-wrap}
+.extra{display:flex;flex-wrap:wrap;gap:8px}
+.video{aspect-ratio:16/9;width:100%;max-width:640px;border:0;border-radius:10px;background:#000}
+.tools{display:none;gap:6px;padding:0 18px 14px;flex-wrap:wrap}
+body.admin .row.open .tools{display:flex}
+body.admin .row{cursor:grab}
+.empty{border:1px dashed var(--line);border-radius:var(--radius);padding:28px;text-align:center;color:var(--muted)}
+footer{padding:36px 0 56px;color:var(--muted);font-size:.85rem}
+footer p{max-width:70ch;margin:0 0 8px}
+
+dialog{background:var(--surface);color:var(--text);border:1px solid var(--line);border-radius:var(--radius);padding:0;width:min(520px,calc(100vw - 24px));max-height:calc(100vh - 24px)}
+dialog::backdrop{background:rgba(5,8,25,.65)}
+dialog form{padding:20px;display:grid;gap:12px;overflow:auto;max-height:calc(100vh - 28px)}
+dialog h2{margin:0;font-size:1.3rem}
+label{display:grid;gap:4px;font-size:.88rem;color:var(--muted)}
+input[type=text],input[type=password],input[type=number],input[type=url],textarea{background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:8px 10px;color:var(--text);width:100%}
+textarea{min-height:84px;resize:vertical}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.actions{display:flex;gap:8px;justify-content:flex-end;flex-wrap:wrap;margin-top:4px}
+.err{color:var(--hot);font-size:.88rem;min-height:1.2em;margin:0}
+.preview{width:112px;height:64px;border-radius:10px;border:1px solid var(--line);background:var(--surface2) center/cover no-repeat}
+#toast{position:fixed;left:50%;bottom:20px;transform:translateX(-50%);background:var(--text);color:var(--bg);padding:8px 16px;border-radius:10px;font-weight:600;opacity:0;pointer-events:none;transition:opacity .2s}
+#toast.show{opacity:1}
+
+@media (max-width:640px){
+  .main{grid-template-columns:44px 1fr;grid-template-areas:"rank info" "thumb info" "meter meter"}
+  .rank{grid-area:rank;font-size:1.8rem}
+  .thumb{grid-area:thumb;width:44px;height:44px}
+  .info{grid-area:info}
+  .meter{grid-area:meter}
+  .two{grid-template-columns:1fr}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+[hidden]{display:none!important}
+.hbtns{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.cmts{border-top:1px dashed var(--line);padding-top:12px;display:grid;gap:8px}
+.cm{background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:8px 12px}
+.cm .who{font-weight:700}.cm .when{color:var(--muted);font-size:.8rem;margin-left:8px}
+.cm p{margin:4px 0 8px;white-space:pre-wrap;word-break:break-word}
+.cm .acts{display:flex;gap:6px}
+.cmform{display:grid;gap:6px;margin-top:6px}
+img.logo{object-fit:contain}
+.tabs{display:flex;gap:8px;margin:0 0 16px}
+.tab.on{background:var(--accent);color:var(--accent-ink);border-color:transparent}
+.pmain{grid-template-columns:64px 1fr!important;grid-template-areas:none!important}
+.pmain .rank,.pmain .info{grid-area:auto!important}
+#plMaps{display:grid;gap:6px;max-height:260px;overflow:auto}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <span class="brand"><span id="logoBox"><svg class="logo" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="3.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 41 L20 39 L41 42 L59 38" stroke-width="5"/><path d="M13 40 C12 29 11 22 15 21 C19 20 20 29 20 39"/><path d="M21 39 C21 25 21 17 25.5 16.5 C30 16 29 26 29 40"/><path d="M30 40 C30 28 30 20 34.5 20 C39 20 38 29 38 41"/><path d="M39 41 C40 32 41 26 45 26.5 C48.5 27 47.5 34 46 42"/></svg></span><span><span id="brandName">Grab’s Hardest</span><small id="brandSmall">unofficial</small></span></span>
+    <div class="hbtns"><button class="btn small" id="themeBtn" type="button"></button><button class="btn small" id="acctBtn" type="button" style="display:none"></button><button class="btn" id="loginBtn" type="button">Admin</button></div>
+  </header>
+
+  <section class="hero">
+    <h1 id="siteTitle">Unofficial Grab’s Hardest</h1>
+    <p class="lede" id="siteIntro">Grab has a ridiculous number of challenge maps and everybody has a different idea of which one is the worst. This is our list. We look at how many people who tried a map actually beat it, how long it takes, and how many checkpoints it gives you, then argue about the order. Nothing to do with Grab itself.</p>
+  </section>
+
+  <div class="adminbar" id="adminbar">
+    <button class="btn primary" id="addBtn" data-need="add" type="button">Add map</button>
+    <button class="btn" id="pasteBtn" data-need="owner" type="button">Paste data</button>
+    <button class="btn" id="addPlayerBtn" data-need="players" type="button">Add player</button>
+    <button class="btn" id="siteBtn" data-need="owner" type="button">Site settings</button>
+    <button class="btn" id="adminsBtn" data-need="owner" type="button">Admins</button>
+    <button class="btn" id="autoBtn" data-need="reorder" type="button">Sort by score</button>
+    <button class="btn" id="exportBtn" type="button">Download data.json</button>
+    <button class="btn" id="importBtn" data-need="owner" type="button">Import data.json</button>
+    <button class="btn danger" id="resetBtn" type="button">Discard my changes</button>
+    <button class="btn" id="logoutBtn" type="button">Log out</button>
+    <span class="note"><span id="who"></span> Changes only save in this browser. To make them public, download data.json and upload it next to index.html.</span>
+    <input type="file" id="importFile" accept="application/json" hidden>
+  </div>
+
+  <main>
+    <nav class="tabs"><button class="btn tab on" type="button" data-view="maps">Maps</button><button class="btn tab" type="button" data-view="players">Players</button></nav>
+    <ol class="board" id="board"></ol>
+    <section id="playersView" hidden><p class="lede" id="playersIntro" style="margin-bottom:14px"></p><ol class="board" id="players"></ol></section>
+  </main>
+
+  <footer>
+    <p id="foot1">How difficulty works: each map gets a number out of 10 from three things, how few checkpoints it has, how few players beat it, how few have beaten it for the time it has been out, and (a lot less) how long it takes. A 10/10 would be no checkpoints, an hour or more to beat, and nobody finishing it. The order on the page is still set by hand.</p>
+    <p id="foot2">Fan project. The maps and pictures belong to the people who made them, and to Grab.</p>
+  </footer>
+</div>
+
+<dialog id="loginDlg">
+  <form id="loginForm" method="dialog">
+    <h2>Admin login</h2>
+    <label>Username<input type="text" id="lUser" autocomplete="username" required></label>
+    <label>Password (owner only, leave empty if you’re another admin)<input type="password" id="lPass" autocomplete="current-password"></label>
+    <label>Admin key<input type="password" id="lKey" autocomplete="off" required></label>
+    <p class="err" id="lErr" role="alert"></p>
+    <div class="actions">
+      <button class="btn" type="button" data-close>Cancel</button>
+      <button class="btn primary" type="submit">Log in</button>
+    </div>
+  </form>
+</dialog>
+
+<dialog id="editDlg">
+  <form id="editForm" method="dialog">
+    <h2 id="editTitle">Edit map</h2>
+    <label>Map name<input type="text" id="eName" required maxlength="80"></label>
+    <label>Creator<input type="text" id="eBy" maxlength="60"></label>
+    <div class="two">
+      <label>Players who played<input type="number" id="ePlayed" min="0" step="1"></label>
+      <label>Players who beat it<input type="number" id="eBeaten" min="0" step="1"></label>
+    </div>
+    <div class="two">
+      <label>Average time to beat (minutes)<input type="number" id="eTime" min="0" step="0.5"></label>
+      <label>Checkpoints (blank if unknown)<input type="number" id="eCp" min="0" step="1"></label>
+    </div>
+    <label>Creation date (blank if unknown)<input type="date" id="eCreated"></label>
+    <label>Thumbnail
+      <div style="display:flex;gap:10px;align-items:center">
+        <div class="preview" id="ePrev"></div>
+        <input type="file" id="eThumbFile" accept="image/*">
+      </div>
+    </label>
+    <label>…or thumbnail image link<input type="url" id="eThumbUrl" placeholder="https://"></label>
+    <label>Description<textarea id="eDesc"></textarea></label>
+    <label>Extra stats, one per line as “Label: value”<textarea id="eExtra" placeholder="First beaten by: Someone&#10;Release date: 2024"></textarea></label>
+    <label>Completion video link (YouTube or any link)<input type="url" id="eVideo" placeholder="https://"></label>
+    <p class="err" id="eErr" role="alert"></p>
+    <div class="actions">
+      <button class="btn danger" type="button" id="eDelete">Delete map</button>
+      <button class="btn" type="button" data-close>Cancel</button>
+      <button class="btn primary" type="submit">Save map</button>
+    </div>
+  </form>
+</dialog>
+
+<dialog id="adminsDlg">
+  <form method="dialog">
+    <h2>Admins</h2>
+    <div id="adminList"></div>
+    <fieldset>
+      <legend>Add an admin</legend>
+      <label>Username<input type="text" id="aName" maxlength="30"></label>
+      <div id="aPowers"></div>
+      <button class="btn primary" type="button" id="aMake">Make admin and key</button>
+      <p id="aOut" role="status"></p>
+    </fieldset>
+    <div class="actions"><button class="btn" type="button" data-close>Done</button></div>
+  </form>
+</dialog>
+
+<dialog id="pasteDlg">
+  <form id="pasteForm" method="dialog">
+    <h2>Paste data</h2>
+    <label>Paste the lot: JSON, or rows copied from a spreadsheet or CSV with a header row<textarea id="pText" style="min-height:220px"></textarea></label>
+    <p class="by" id="pInfo">Nothing pasted yet.</p>
+    <label class="chk"><input type="radio" name="pMode" value="merge" checked> Add to the list, and update maps with the same name</label>
+    <label class="chk"><input type="radio" name="pMode" value="replace"> Replace the whole list</label>
+    <label class="chk"><input type="checkbox" id="pSort" checked> Sort by score afterwards</label>
+    <div class="actions">
+      <button class="btn" type="button" data-close>Cancel</button>
+      <button class="btn primary" type="submit">Use this data</button>
+    </div>
+  </form>
+</dialog>
+
+<dialog id="acctDlg">
+  <form id="acctForm" method="dialog">
+    <h2 id="acctTitle">Sign in</h2>
+    <label id="acctUserWrap">Username (shown on your comments)<input type="text" id="acctUser" maxlength="24" autocomplete="username"></label>
+    <label>Email<input type="email" id="acctEmail" required autocomplete="email"></label>
+    <label>Password (6 or more characters)<input type="password" id="acctPw" required minlength="6" autocomplete="current-password"></label>
+    <p class="err" id="acctErr" role="alert"></p>
+    <div class="actions"><button class="btn" type="button" id="acctSwitch"></button><button class="btn" type="button" data-close>Cancel</button><button class="btn primary" type="submit" id="acctGo">Sign in</button></div>
+  </form>
+</dialog>
+
+<dialog id="siteDlg">
+  <form id="siteForm" method="dialog">
+    <h2>Site settings</h2>
+    <label>Big title<input type="text" id="sTitle" maxlength="80"></label>
+    <div class="two"><label>Name next to the logo<input type="text" id="sBrand" maxlength="40"></label><label>Small word under it<input type="text" id="sSmall" maxlength="30"></label></div>
+    <label>Intro text<textarea id="sIntro"></textarea></label>
+    <label>Footer, first paragraph<textarea id="sFoot1"></textarea></label>
+    <label>Footer, second paragraph<textarea id="sFoot2"></textarea></label>
+    <label>Players page intro<textarea id="sPIntro"></textarea></label>
+    <label>Logo
+      <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><div class="preview" id="sPrev" style="width:64px;height:64px;background-size:contain;background-repeat:no-repeat"></div><input type="file" id="sLogoFile" accept="image/*"><button class="btn small" type="button" id="sLogoReset">Use the original logo</button></div>
+    </label>
+    <div class="two"><label>Accent colour<input type="color" id="sAccent" style="height:38px;width:100%"></label><label class="chk" style="margin-top:20px"><input type="checkbox" id="sAccentDef"> Use the default colour</label></div>
+    <fieldset><legend>How difficulty is worked out (weights, any numbers)</legend>
+      <div class="two"><label>Few checkpoints<input type="number" id="sWDiff" min="0" step="any"></label><label>Few players beat it<input type="number" id="sWBeat" min="0" step="any"></label></div>
+      <div class="two"><label>Long time to beat (60 min is max)<input type="number" id="sWTime" min="0" step="any"></label><label>Checkpoints that count as fully easy<input type="number" id="sCap" min="1" step="1"></label></div>
+      <div class="two"><label>Few clears for the map’s age<input type="number" id="sWAge" min="0" step="any"></label><label>Clears per month that count as fully easy<input type="number" id="sAgeCap" min="1" step="1"></label></div>
+      <label>Player points per map score point<input type="number" id="sMult" min="0" step="0.5"></label>
+    </fieldset>
+    <fieldset><legend>Comments and accounts (setup steps are in comments-setup.sql)</legend>
+      <label>Supabase project URL<input type="url" id="sSbUrl" placeholder="https://xxxx.supabase.co"></label>
+      <label>Supabase anon public key<input type="text" id="sSbKey"></label>
+      <div><button class="btn small" type="button" id="sTest">Test the connection</button></div>
+      <p class="by" id="sTestOut" role="status"></p>
+    </fieldset>
+    <div class="actions"><button class="btn" type="button" data-close>Cancel</button><button class="btn primary" type="submit">Save settings</button></div>
+  </form>
+</dialog>
+
+<dialog id="playerDlg">
+  <form id="playerForm" method="dialog">
+    <h2>Player</h2>
+    <label>Player name<input type="text" id="plName" maxlength="40" required></label>
+    <div>Maps they have beaten</div>
+    <div id="plMaps"></div>
+    <div class="actions"><button class="btn danger" type="button" id="plDel">Delete player</button><button class="btn" type="button" data-close>Cancel</button><button class="btn primary" type="submit">Save player</button></div>
+  </form>
+</dialog>
+
+<div id="toast" role="status"></div>
+
+<script>
+(function(){
+'use strict';
+
+/* Hash of "ugh|username|password|adminkey". The login details are not stored as plain text,
+   but this is still a front-end-only check: it keeps casual visitors out, it is not real security. */
+var LOGIN_HASH = '31f0eadf44e932a3da5729b88c8bd77b4abd4e4b27b208f193fc7d4e4cd016ea';
+var DRAFT_KEY = 'ugh-draft-v1';
+var SESSION_KEY = 'ugh-admin-v1';
+
+/* Placeholder entries so the page is not empty. Delete or edit them after logging in. */
+var DEFAULT_MAPS = [
+  {id:'s1',name:'Sample map A',by:'Creator',played:1000,beaten:12,time:45,cp:0,created:'2023-01-15',diff:10,thumb:'',desc:'Sample entry. Edit it or delete it.',extra:[],video:''},
+  {id:'s2',name:'Sample map B',by:'Creator',played:2400,beaten:150,time:22,cp:2,created:'2024-03-02',diff:8,thumb:'',desc:'Sample entry. Edit it or delete it.',extra:[],video:''},
+  {id:'s3',name:'Sample map C',by:'Creator',played:5200,beaten:900,time:9,cp:6,created:'2025-06-20',diff:5,thumb:'',desc:'Sample entry. Edit it or delete it.',extra:[],video:''}
+];
+
+var maps = [];
+var isAdmin = false;
+var admins = [];
+var me = null;
+var players = [];
+var site = {};
+var view = 'maps';
+var LOGO_HTML = document.getElementById('logoBox').innerHTML;
+var ORIG_ICON = document.querySelector('link[rel=icon]').getAttribute('href');
+var SITE_DEF = {
+  title:'Unofficial Grab’s Hardest', brand:'Grab’s Hardest', small:'unofficial',
+  intro:document.getElementById('siteIntro').textContent, foot1:document.getElementById('foot1').textContent, foot2:document.getElementById('foot2').textContent,
+  playersIntro:'Beat a map, take its points. The harder the map, the more it is worth, so this list shuffles every time someone clears something nasty.',
+  dwCp:1, dwRate:1, dwAge:1, dwLen:0.25, cpCap:10, ageCap:100, pointsMult:1
+};
+var openId = null;
+var dragId = null;
+var editingId = null;
+var pendingThumb = '';
+
+var $ = function(s){ return document.querySelector(s); };
+function esc(s){ return String(s == null ? '' : s).replace(/[&<>"']/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]; }); }
+function safeUrl(u){ u = String(u || '').trim(); return (/^https?:\/\//i.test(u) || /^data:image\//i.test(u)) ? u : ''; }
+function uid(){ return 'm' + Date.now().toString(36) + Math.random().toString(36).slice(2,6); }
+function num(v, d){ var n = parseFloat(v); return isFinite(n) ? n : d; }
+
+function toDate(v){
+  if (v == null || v === '') return '';
+  var n = /^\d{9,}$/.test(String(v)) ? Number(v) : null, d = n != null ? new Date(n > 1e11 ? n : n * 1000) : new Date(v);
+  return isNaN(d) ? '' : d.toISOString().slice(0, 10);
+}
+function perMonth(m){
+  if (!m.created || !(m.played > 0 || m.beaten > 0)) return null;
+  var days = (Date.now() - new Date(m.created).getTime()) / 864e5; if (isNaN(days) || days < 0) return null;
+  return m.beaten / (Math.max(days, 7) / 30.44);
+}
+function beatRate(m){ return m.played > 0 ? Math.min(1, m.beaten / m.played) : null; }
+function S(k){ return site[k] != null && site[k] !== '' ? site[k] : SITE_DEF[k]; }
+/* Difficulty out of 10, worked out from the map's own numbers.
+   10/10 = 0 checkpoints + 60 minutes or more + 0% of players beat it. Anything unknown is left out. */
+function diffOf(m){
+  var cap = num(S('cpCap'), 10) || 10, f = [], w = function(k){ return Math.max(0, num(S(k), 1)); };
+  if (m.cp != null) f.push([w('dwCp'), 1 - Math.min(m.cp, cap) / cap]);
+  if (m.played > 0) f.push([w('dwRate'), 1 - Math.min(1, m.beaten / m.played)]);
+  var pm = perMonth(m);   /* few clears for how long it has been out = harder (log scale) */
+  if (pm != null) { var ac = num(S('ageCap'), 100) || 100; f.push([w('dwAge'), 1 - Math.min(1, Math.log(1 + pm) / Math.log(1 + ac))]); }
+  if (m.time > 0) f.push([w('dwLen'), Math.min(m.time, 60) / 60]);
+  var tw = f.reduce(function(a, x){ return a + x[0]; }, 0); if (!tw) return null;
+  return Math.round(f.reduce(function(a, x){ return a + x[0] * x[1]; }, 0) / tw * 100) / 10;
+}
+function score(m){ var d = diffOf(m); return d == null ? 0 : Math.round(d * 10); }
+function pts(m){ return Math.round(score(m) * num(S('pointsMult'), 1)); }
+function fmtPct(r){ if (r === null) return 'n/a'; var p = r * 100; return (p < 10 ? p.toFixed(1) : Math.round(p)) + '%'; }
+function fmtNum(n){ return Number(n).toLocaleString('en-US'); }
+
+function toast(msg){ var t = $('#toast'); t.textContent = msg; t.classList.add('show'); clearTimeout(toast.t); toast.t = setTimeout(function(){ t.classList.remove('show'); }, 2200); }
+
+/* ---------- data ---------- */
+function normalise(list){
+  return (Array.isArray(list) ? list : []).map(function(m){
+    return {
+      id: m.id || uid(), name: String(m.name || 'Untitled map'), by: String(m.by || ''),
+      played: Math.max(0, num(m.played, 0)), beaten: Math.max(0, num(m.beaten, 0)),
+      time: Math.max(0, num(m.time, 0)), created: toDate(m.created), cp: (m.cp == null || m.cp === '') ? null : Math.max(0, num(m.cp, 0)), diff: Math.min(10, Math.max(1, Math.round(num(m.diff, 5)))),
+      thumb: String(m.thumb || ''), desc: String(m.desc || ''),
+      extra: Array.isArray(m.extra) ? m.extra.map(function(e){ return {label:String(e.label||''), value:String(e.value||'')}; }) : [],
+      video: String(m.video || '')
+    };
+  });
+}
+function useData(j){
+  if (Array.isArray(j)) j = {maps:j};
+  maps = normalise(j.maps);
+  if (Array.isArray(j.players)) players = j.players.map(function(p){ return {id:p.id || uid(), name:String(p.name || 'Player'), beaten:Array.isArray(p.beaten) ? p.beaten : []}; });
+  if (j.site && typeof j.site === 'object') site = j.site;
+  if (Array.isArray(j.admins)) admins = j.admins.filter(function(a){ return a && a.name && a.salt && a.hash && Array.isArray(a.powers); });
+}
+function saveDraft(){
+  try { localStorage.setItem(DRAFT_KEY, JSON.stringify({admins:admins, maps:maps, players:players, site:site})); }
+  catch(e){ toast('Could not save here (storage full). Download data.json to keep your work.'); }
+}
+function load(){
+  var draft = null;
+  try { draft = JSON.parse(localStorage.getItem(DRAFT_KEY) || 'null'); } catch(e){}
+  if (draft && (draft.length || draft.maps)) { useData(draft); render(); return Promise.resolve(); }
+  return fetch('data.json', {cache:'no-cache'}).then(function(r){ if (!r.ok) throw 0; return r.json(); })
+    .then(function(j){ useData(j); })
+    .catch(function(){ maps = normalise(DEFAULT_MAPS); })
+    .then(render);
+}
+
+/* ---------- render ---------- */
+function videoHtml(url){
+  url = safeUrl(url); if (!url) return '';
+  var m = url.match(/(?:youtu\.be\/|v=|embed\/|shorts\/)([\w-]{11})/);
+  if (m) return '<iframe class="video" src="https://www.youtube-nocookie.com/embed/' + m[1] + '" title="Completion video" loading="lazy" allowfullscreen></iframe>';
+  return '<p><a href="' + esc(url) + '" target="_blank" rel="noopener noreferrer">Watch the completion video</a></p>';
+}
+function meterHtml(d){
+  var s = '';
+  for (var i = 1; i <= 10; i++) s += '<i class="' + (i <= d ? 'on' + (d >= 8 ? ' hi' : '') : '') + '" style="height:' + (8 + i * 2) + 'px"></i>';
+  return '<div class="meter" role="img" aria-label="Difficulty ' + d + ' out of 10">' + s + '</div>';
+}
+function lum(h){ var n = parseInt(h.slice(1), 16); return (0.299 * (n >> 16 & 255) + 0.587 * (n >> 8 & 255) + 0.114 * (n & 255)) / 255; }
+function applySite(){
+  $('#siteTitle').textContent = S('title'); document.title = S('title');
+  $('#brandName').textContent = S('brand'); $('#brandSmall').textContent = S('small');
+  $('#siteIntro').textContent = S('intro'); $('#foot1').textContent = S('foot1'); $('#foot2').textContent = S('foot2'); $('#playersIntro').textContent = S('playersIntro');
+  $('#logoBox').innerHTML = safeUrl(site.logo) ? '<img class="logo" alt="" src="' + esc(site.logo) + '">' : LOGO_HTML;
+  document.querySelector('link[rel=icon]').setAttribute('href', safeUrl(site.logo) || ORIG_ICON);
+  var st = document.documentElement.style;
+  if (site.accent) { st.setProperty('--accent', site.accent); st.setProperty('--accent-ink', lum(site.accent) > 0.5 ? '#1d1e22' : '#ffffff'); }
+  else { st.removeProperty('--accent'); st.removeProperty('--accent-ink'); }
+}
+function render(){ applySite(); applyAcct(); renderMaps(); renderPlayers(); drawComments(); }
+function renderPlayers(){
+  var rows = players.map(function(p){
+    var ms = p.beaten.map(function(id){ return maps.find(function(m){ return m.id === id; }); }).filter(Boolean);
+    return {p:p, ms:ms, pts:ms.reduce(function(a, m){ return a + pts(m); }, 0)};
+  }).sort(function(a, b){ return b.pts - a.pts || b.ms.length - a.ms.length || a.p.name.localeCompare(b.p.name); });
+  var rk = 0;
+  $('#players').innerHTML = rows.length ? rows.map(function(r, i){
+    if (i === 0 || r.pts !== rows[i - 1].pts) rk = i + 1;
+    var open = r.p.id === openPid;
+    return '<li class="row' + (open ? ' open' : '') + '" data-pid="' + r.p.id + '"><button class="main pmain" type="button" data-act="ptoggle"><span class="rank">' + rk + '</span>' +
+      '<span class="info"><span class="name">' + esc(r.p.name) + '</span><span class="chips"><span class="chip">Points <b>' + fmtNum(r.pts) + '</b></span><span class="chip">Maps beaten <b>' + r.ms.length + '</b></span></span></span></button>' +
+      '<div class="details"><div class="extra">' + (r.ms.map(function(m){ return '<span class="chip">' + esc(m.name) + ' <b>+' + pts(m) + '</b></span>'; }).join('') || '<span class="by">Nothing beaten yet.</span>') + '</div></div>' +
+      '<div class="tools">' + (can('players') ? '<button class="btn small primary" type="button" data-act="pedit">Edit player</button>' : '') + '</div></li>';
+  }).join('') : '<li class="empty">No players on the board yet.</li>';
+}
+function renderMaps(){
+  var board = $('#board');
+  if (!maps.length) {
+    board.innerHTML = '<li class="empty">' + (isAdmin ? 'No maps yet. Use “Add map” to start the ranking.' : 'No maps ranked yet. Check back soon.') + '</li>';
+    return;
+  }
+  board.innerHTML = maps.map(function(m, i){
+    var r = beatRate(m), thumb = safeUrl(m.thumb), dv = diffOf(m);
+    var open = m.id === openId;
+    var extra = m.extra.map(function(e){ return '<span class="chip">' + esc(e.label) + ' <b>' + esc(e.value) + '</b></span>'; }).join('');
+    return '<li class="row' + (open ? ' open' : '') + '" data-id="' + m.id + '"' + (can('reorder') ? ' draggable="true"' : '') + '>' +
+      '<button class="main" type="button" data-act="toggle" aria-expanded="' + open + '">' +
+        '<span class="rank">' + (i + 1) + '</span>' +
+        '<span class="thumb"' + (thumb ? ' style="background-image:url(\'' + esc(thumb) + '\')"' : '') + '></span>' +
+        '<span class="info"><span class="name">' + esc(m.name) + '</span>' + (m.by ? '<br><span class="by">by ' + esc(m.by) + '</span>' : '') +
+          '<span class="chips">' +
+            '<span class="chip">Beat rate <b>' + fmtPct(r) + '</b>' + (m.played ? ' (' + fmtNum(m.beaten) + ' of ' + fmtNum(m.played) + ')' : '') + '</span>' +
+            '<span class="chip">Avg time <b>' + (m.time ? m.time + ' min' : 'n/a') + '</b></span>' +
+            (m.cp != null ? '<span class="chip">Checkpoints <b>' + m.cp + '</b></span>' : '') +
+            (m.created ? '<span class="chip">Created <b>' + new Date(m.created + 'T00:00:00').toLocaleDateString(undefined, {month:'short', day:'numeric', year:'numeric'}) + '</b></span>' : '') +
+            (perMonth(m) != null ? '<span class="chip">Clears per month <b>' + (perMonth(m) < 10 ? perMonth(m).toFixed(1) : Math.round(perMonth(m))) + '</b></span>' : '') + '<span class="chip">Difficulty <b>' + (dv == null ? 'n/a' : dv + '/10') + '</b></span>' +
+            '<span class="chip">Score <b>' + score(m) + '</b></span>' +
+          '</span></span>' +
+        meterHtml(dv || 0) +
+      '</button>' +
+      '<div class="details">' +
+        (m.desc ? '<p>' + esc(m.desc) + '</p>' : '') +
+        (extra ? '<div class="extra">' + extra + '</div>' : '') +
+        videoHtml(m.video) +
+        (!m.desc && !extra && !m.video ? '<p class="by">No extra details yet.</p>' : '') +
+        '<div><button class="btn small" type="button" data-act="comments">' + (cmOpen === m.id ? 'Hide comments' : 'Comments') + '</button></div>' +
+        (cmOpen === m.id ? '<div class="cmts" data-cm="' + m.id + '"></div>' : '') +
+      '</div>' +
+      '<div class="tools">' +
+        (can('reorder') ? '<button class="btn small" type="button" data-act="up">Move up</button><button class="btn small" type="button" data-act="down">Move down</button>' : '') +
+        (can('edit') || can('media') || can('delete') ? '<button class="btn small primary" type="button" data-act="edit">Edit</button>' : '') +
+      '</div>' +
+    '</li>';
+  }).join('');
+}
+
+/* ---------- list interactions ---------- */
+function move(id, to){
+  var from = maps.findIndex(function(m){ return m.id === id; });
+  if (from < 0) return;
+  to = Math.max(0, Math.min(maps.length - 1, to));
+  maps.splice(to, 0, maps.splice(from, 1)[0]);
+  saveDraft(); render();
+}
+$('#board').addEventListener('click', function(e){
+  var row = e.target.closest('.row'); if (!row) return;
+  var id = row.dataset.id, btn = e.target.closest('[data-act]'); if (!btn) return;
+  var act = btn.dataset.act, idx = maps.findIndex(function(m){ return m.id === id; });
+  if (act === 'toggle') { openId = (openId === id) ? null : id; render(); }
+  else if (act.charAt(0) === 'c') commentAct(act, btn, id);
+  else if (!isAdmin) return;
+  else if (act === 'up') move(id, idx - 1);
+  else if (act === 'down') move(id, idx + 1);
+  else if (act === 'edit') openEdit(id);
+});
+$('#board').addEventListener('dragstart', function(e){
+  var row = e.target.closest('.row'); if (!row || !can('reorder')) return e.preventDefault();
+  dragId = row.dataset.id; row.classList.add('dragging');
+  e.dataTransfer.effectAllowed = 'move'; e.dataTransfer.setData('text/plain', dragId);
+});
+$('#board').addEventListener('dragover', function(e){
+  if (!dragId) return;
+  e.preventDefault();
+  var row = e.target.closest('.row'); if (!row) return;
+  document.querySelectorAll('.over-top,.over-bottom').forEach(function(n){ n.classList.remove('over-top','over-bottom'); });
+  var box = row.getBoundingClientRect();
+  row.classList.add(e.clientY < box.top + box.height / 2 ? 'over-top' : 'over-bottom');
+});
+$('#board').addEventListener('drop', function(e){
+  if (!dragId) return;
+  e.preventDefault();
+  var row = e.target.closest('.row'); if (!row) return;
+  var box = row.getBoundingClientRect(), after = e.clientY >= box.top + box.height / 2;
+  var target = maps.findIndex(function(m){ return m.id === row.dataset.id; });
+  var from = maps.findIndex(function(m){ return m.id === dragId; });
+  var to = target + (after ? 1 : 0); if (from < to) to--;
+  var id = dragId; dragId = null; move(id, to);
+});
+$('#board').addEventListener('dragend', function(){ dragId = null; render(); });
+
+/* ---------- login ---------- */
+function sha256(s){
+  return crypto.subtle.digest('SHA-256', new TextEncoder().encode(s)).then(function(b){
+    return Array.prototype.map.call(new Uint8Array(b), function(x){ return x.toString(16).padStart(2, '0'); }).join('');
+  });
+}
+function can(p){ return !!(me && (me.owner || me.powers.indexOf(p) > -1)); }
+function applyPerms(){
+  document.querySelectorAll('[data-need]').forEach(function(b){ b.style.display = (b.dataset.need === 'owner' ? !!(me && me.owner) : can(b.dataset.need)) ? '' : 'none'; });
+  $('#who').textContent = me ? 'Logged in as ' + me.name + '.' : '';
+}
+function setAdmin(a){
+  me = a || null; isAdmin = !!me; document.body.classList.toggle('admin', isAdmin);
+  $('#loginBtn').textContent = isAdmin ? 'Admin mode' : 'Admin';
+  try { me ? sessionStorage.setItem(SESSION_KEY, JSON.stringify({n:me.name, o:!!me.owner})) : sessionStorage.removeItem(SESSION_KEY); } catch(e){}
+  applyPerms(); render();
+}
+function adminHash(a, u, k){ return sha256(a.salt + '|' + u.toLowerCase() + '|' + k.toUpperCase().replace(/[^A-Z0-9]/g, '')); }
+function findAdmin(list, u, k){
+  return Promise.all((list || []).map(function(a){
+    return a.name.toLowerCase() === u.toLowerCase() ? adminHash(a, u, k).then(function(h){ return h === a.hash ? a : null; }) : null;
+  })).then(function(r){ return r.find(Boolean) || null; });
+}
+$('#loginBtn').addEventListener('click', function(){
+  if (isAdmin) { document.getElementById('adminbar').scrollIntoView({behavior:'smooth', block:'center'}); return; }
+  $('#lErr').textContent = ''; $('#loginForm').reset(); $('#loginDlg').showModal();
+});
+$('#loginForm').addEventListener('submit', function(e){
+  e.preventDefault();
+  if (!window.crypto || !crypto.subtle) { $('#lErr').textContent = 'Login needs a secure (https) page. Open the site through its https address.'; return; }
+  var u = $('#lUser').value.trim(), k = $('#lKey').value.trim();
+  var ok = function(a){ $('#loginDlg').close(); setAdmin(a); toast('Logged in'); };
+  sha256('ugh|' + u + '|' + $('#lPass').value + '|' + k).then(function(h){
+    if (h === LOGIN_HASH) return ok({name:u, owner:true, powers:[]});
+    return findAdmin(admins, u, k).then(function(a){
+      if (a) return ok(a);
+      return fetch('data.json', {cache:'no-cache'}).then(function(r){ return r.json(); })
+        .then(function(j){ return findAdmin(j.admins, u, k); }).catch(function(){ return null; })
+        .then(function(a2){ if (a2) ok(a2); else $('#lErr').textContent = 'Username, password or admin key is wrong. Check each one and try again.'; });
+    });
+  });
+});
+$('#logoutBtn').addEventListener('click', function(){ setAdmin(false); toast('Logged out'); });
+document.querySelectorAll('[data-close]').forEach(function(b){ b.addEventListener('click', function(){ b.closest('dialog').close(); }); });
+
+/* ---------- admin toolbar ---------- */
+$('#autoBtn').addEventListener('click', function(){
+  if (!confirm('Re-sort every map by score, highest first? This replaces your manual order.')) return;
+  maps.sort(function(a, b){ return score(b) - score(a); }); saveDraft(); render(); toast('Sorted by score');
+});
+$('#exportBtn').addEventListener('click', function(){
+  var blob = new Blob([JSON.stringify({admins:admins, maps:maps, players:players, site:site}, null, 2)], {type:'application/json'});
+  var a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'data.json';
+  document.body.appendChild(a); a.click(); a.remove(); setTimeout(function(){ URL.revokeObjectURL(a.href); }, 1000);
+  toast('Upload data.json next to index.html to publish');
+});
+$('#importBtn').addEventListener('click', function(){ $('#importFile').click(); });
+$('#importFile').addEventListener('change', function(){
+  var f = this.files[0]; if (!f) return;
+  var rd = new FileReader();
+  rd.onload = function(){
+    try { var j = JSON.parse(rd.result); if (!Array.isArray(j) && !j.maps) throw 0; useData(j); saveDraft(); render(); toast('Imported ' + maps.length + ' maps'); }
+    catch(e){ toast('That file is not a valid data.json'); }
+  };
+  rd.readAsText(f); this.value = '';
+});
+$('#resetBtn').addEventListener('click', function(){
+  if (!confirm('Discard all changes made in this browser and go back to the published list?')) return;
+  try { localStorage.removeItem(DRAFT_KEY); } catch(e){}
+  openId = null; players = []; site = {}; admins = []; load(); toast('Back to the published list');
+});
+
+/* ---------- add / edit ---------- */
+function setPreview(url){ var p = $('#ePrev'); url = safeUrl(url); p.style.backgroundImage = url ? 'url("' + url.replace(/"/g, '%22') + '")' : ''; }
+function openEdit(id){
+  editingId = id; pendingThumb = ''; $('#eErr').textContent = '';
+  var m = id ? maps.find(function(x){ return x.id === id; }) : {name:'',by:'',played:'',beaten:'',time:'',diff:5,cp:null,thumb:'',desc:'',extra:[],video:''};
+  $('#editTitle').textContent = id ? 'Edit map' : 'Add map';
+  $('#eName').value = m.name; $('#eBy').value = m.by;
+  $('#ePlayed').value = m.played; $('#eBeaten').value = m.beaten; $('#eTime').value = m.time; $('#eCp').value = m.cp == null ? '' : m.cp; $('#eCreated').value = m.created || '';
+  $('#eThumbFile').value = ''; $('#eThumbUrl').value = /^data:/.test(m.thumb) ? '' : m.thumb; setPreview(m.thumb);
+  pendingThumb = /^data:/.test(m.thumb) ? m.thumb : '';
+  $('#eDesc').value = m.desc; $('#eVideo').value = m.video;
+  $('#eExtra').value = m.extra.map(function(e){ return e.label + ': ' + e.value; }).join('\n');
+  $('#eDelete').style.display = (id && can('delete')) ? '' : 'none';
+  var fe = id ? can('edit') : can('add');
+  ['#eName','#eBy','#ePlayed','#eBeaten','#eTime','#eCp','#eCreated','#eDesc','#eExtra'].forEach(function(q){ $(q).disabled = !fe; });
+  ['#eThumbFile','#eThumbUrl','#eVideo'].forEach(function(q){ $(q).disabled = !can('media'); });
+  $('#editDlg').showModal();
+}
+$('#addBtn').addEventListener('click', function(){ openEdit(null); });
+$('#eThumbUrl').addEventListener('input', function(){ pendingThumb = ''; setPreview(this.value); });
+$('#eThumbFile').addEventListener('change', function(){
+  var f = this.files[0]; if (!f) return;
+  var img = new Image(), url = URL.createObjectURL(f);
+  img.onload = function(){
+    var w = Math.min(560, img.width), h = Math.round(img.height * w / img.width);
+    var c = document.createElement('canvas'); c.width = w; c.height = h;
+    c.getContext('2d').drawImage(img, 0, 0, w, h);
+    pendingThumb = c.toDataURL('image/jpeg', 0.82); $('#eThumbUrl').value = ''; setPreview(pendingThumb); URL.revokeObjectURL(url);
+  };
+  img.onerror = function(){ $('#eErr').textContent = 'That file could not be read as an image. Try a PNG or JPG.'; };
+  img.src = url;
+});
+$('#editForm').addEventListener('submit', function(e){
+  e.preventDefault();
+  var played = Math.max(0, num($('#ePlayed').value, 0)), beaten = Math.max(0, num($('#eBeaten').value, 0));
+  if (beaten > played) { $('#eErr').textContent = 'Players who beat it cannot be more than players who played.'; return; }
+  var extra = $('#eExtra').value.split('\n').map(function(l){
+    var i = l.indexOf(':'); return i > 0 ? {label:l.slice(0, i).trim(), value:l.slice(i + 1).trim()} : null;
+  }).filter(function(x){ return x && x.label; });
+  var data = {
+    name: $('#eName').value.trim() || 'Untitled map', by: $('#eBy').value.trim(),
+    played: played, beaten: beaten, time: Math.max(0, num($('#eTime').value, 0)),
+    created: $('#eCreated').value, cp: $('#eCp').value === '' ? null : Math.max(0, num($('#eCp').value, 0)),
+    thumb: pendingThumb || $('#eThumbUrl').value.trim(), desc: $('#eDesc').value.trim(), extra: extra, video: $('#eVideo').value.trim()
+  };
+  if (editingId) {
+    var m = maps.find(function(x){ return x.id === editingId; });
+    var keep = function(ks){ ks.forEach(function(k){ data[k] = m[k]; }); };
+    if (!can('edit')) keep(['name','by','played','beaten','time','cp','created','desc','extra']);
+    if (!can('media')) keep(['thumb','video']);
+    Object.assign(m, data);
+  }
+  else { data.id = uid(); maps.push(data); openId = data.id; }
+  saveDraft(); render(); $('#editDlg').close(); toast('Map saved');
+});
+$('#eDelete').addEventListener('click', function(){
+  if (!editingId || !confirm('Delete this map from the ranking?')) return;
+  maps = maps.filter(function(m){ return m.id !== editingId; }); saveDraft(); render(); $('#editDlg').close(); toast('Map deleted');
+});
+
+/* ---------- paste a pile of data ---------- */
+var ALIAS = {
+  name:['title','name','map','level','mapname'], by:['creators','creator','by','author','maker'],
+  played:['totalplayed','played','plays','totalplays','attempts','players'],
+  beaten:['totalbeaten','beaten','completed','completions','finishes','wins','finished'],
+  time:['avgtime','averagetime','time','minutes','besttime'], cp:['checkpoints','checkpoint','checkpointcount','numcheckpoints'], created:['created','createdat','creationdate','creationtimestamp','creation','releasedate','uploaded','date','timestamp'], diff:['difficulty','diff','rating'],
+  thumb:['thumbnail','thumb','image','img','picture'], desc:['description','desc','about','notes'], video:['video','videolink','link','youtube']
+};
+function flat(o, out){
+  for (var k in o) { var v = o[k];
+    if (v && typeof v === 'object' && !Array.isArray(v)) flat(v, out);
+    else { var kk = k.toLowerCase().replace(/[^a-z]/g, ''); if (!(kk in out)) out[kk] = v; } }
+  return out;
+}
+function fuzzy(o){
+  var f = flat(o, {}), r = {};
+  Object.keys(ALIAS).forEach(function(k){
+    for (var i = 0; i < ALIAS[k].length; i++) { var v = f[ALIAS[k][i]];
+      if (v != null && v !== '') { r[k] = Array.isArray(v) ? v.map(function(x){ return (x && x.name) || x; }).join(', ') : v; break; } }
+  });
+  if (r.name == null) return null;
+  var d = num(r.diff, 5); if (d > 0 && d <= 1) d = d * 10; r.diff = Math.max(1, Math.round(d));
+  var t = num(r.time, 0); if (t > 120) t = Math.round(t / 6) / 10; r.time = t;
+  return r;
+}
+function splitLine(l, d){
+  var out = [], cur = '', q = false;
+  for (var i = 0; i < l.length; i++) { var c = l[i];
+    if (c === '"') { if (q && l[i + 1] === '"') { cur += '"'; i++; } else q = !q; }
+    else if (c === d && !q) { out.push(cur); cur = ''; } else cur += c; }
+  out.push(cur); return out;
+}
+function parseBulk(t){
+  t = t.trim(); if (!t) return [];
+  var rows;
+  try { var j = JSON.parse(t); rows = Array.isArray(j) ? j : (j.maps || j.levels || j.results || j.data || j.items || j.list || []); if (!Array.isArray(rows)) rows = []; }
+  catch(e){
+    var L = t.split(/\r?\n/).filter(function(l){ return l.trim(); }); if (L.length < 2) return [];
+    var d = L[0].indexOf('\t') > -1 ? '\t' : (L[0].indexOf('|') > -1 ? '|' : ',');
+    var H = splitLine(L[0], d);
+    rows = L.slice(1).map(function(l){ var c = splitLine(l, d), o = {}; H.forEach(function(h, i){ o[h.trim()] = (c[i] || '').trim(); }); return o; });
+  }
+  return rows.map(function(r){ return r && typeof r === 'object' ? fuzzy(r) : null; }).filter(Boolean);
+}
+$('#pasteBtn').addEventListener('click', function(){ $('#pText').value = ''; $('#pInfo').textContent = 'Nothing pasted yet.'; $('#pasteDlg').showModal(); });
+$('#pText').addEventListener('input', function(){
+  var n = parseBulk(this.value).length;
+  $('#pInfo').textContent = !this.value.trim() ? 'Nothing pasted yet.' : n ? 'Found ' + n + ' maps.' : 'No maps found. It needs a name or title for each map, and a header row if it is a spreadsheet.';
+});
+$('#pasteForm').addEventListener('submit', function(e){
+  e.preventDefault();
+  var list = normalise(parseBulk($('#pText').value)); list.forEach(function(n){ n.id = 'm-' + n.name.toLowerCase().replace(/[^a-z0-9]+/g, '-'); }); if (!list.length) { $('#pInfo').textContent = 'No maps found, so nothing was changed.'; return; }
+  var replace = document.querySelector('input[name=pMode]:checked').value === 'replace';
+  if (replace && maps.length && !confirm('Replace all ' + maps.length + ' current maps with these ' + list.length + '?')) return;
+  if (replace) maps = list;
+  else list.forEach(function(n){
+    var old = maps.find(function(m){ return m.name.toLowerCase() === n.name.toLowerCase(); });
+    if (!old) return maps.push(n);
+    ['played','beaten','time'].forEach(function(k){ old[k] = n[k]; }); if (n.cp != null) old.cp = n.cp; if (n.created) old.created = n.created;
+    ['by','thumb','desc','video'].forEach(function(k){ if (n[k]) old[k] = n[k]; });
+  });
+  if ($('#pSort').checked) maps.sort(function(a, b){ return score(b) - score(a); });
+  saveDraft(); render(); $('#pasteDlg').close(); toast(list.length + ' maps added. Check the numbers look right.');
+});
+
+/* ---------- other admins ---------- */
+var POWERS = {reorder:'Reorder the ranking', edit:'Edit stats and descriptions', add:'Add maps', 'delete':'Delete maps', media:'Thumbnails and videos', players:'Edit the player leaderboard'};
+$('#aPowers').innerHTML = Object.keys(POWERS).map(function(p){ return '<label class="chk"><input type="checkbox" value="' + p + '"> ' + POWERS[p] + '</label>'; }).join('');
+function rkey(){
+  var A = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789', b = crypto.getRandomValues(new Uint8Array(16)), s = '';
+  for (var i = 0; i < 16; i++) { s += A[b[i] % 32]; if (i % 4 === 3 && i < 15) s += '-'; }
+  return s;
+}
+function cred(name){
+  var salt = Array.prototype.map.call(crypto.getRandomValues(new Uint8Array(6)), function(x){ return x.toString(16).padStart(2, '0'); }).join(''), key = rkey();
+  return adminHash({salt:salt}, name, key).then(function(h){ return {salt:salt, hash:h, key:key}; });
+}
+function showKey(name, key){
+  $('#aOut').innerHTML = 'Key for <b>' + esc(name) + '</b>: <code>' + key + '</code><br><span class="by">Copy it now, it is only shown once. They log in with this username and key and leave the password empty. Then download data.json and upload it so the login works for everyone.</span>';
+}
+function listAdmins(){
+  $('#adminList').innerHTML = admins.map(function(a, i){
+    return '<div class="arow"><b>' + esc(a.name) + '</b><span class="by">' + a.powers.map(function(p){ return POWERS[p] || p; }).join(', ') + '</span>' +
+      '<button class="btn small" type="button" data-k="' + i + '">New key</button><button class="btn small danger" type="button" data-r="' + i + '">Remove</button></div>';
+  }).join('') || '<p class="by">No other admins yet.</p>';
+}
+$('#adminsBtn').addEventListener('click', function(){ $('#aOut').textContent = ''; $('#aName').value = ''; listAdmins(); $('#adminsDlg').showModal(); });
+$('#aMake').addEventListener('click', function(){
+  var name = $('#aName').value.trim().replace(/[^\w .-]/g, ''), powers = Array.prototype.map.call(document.querySelectorAll('#aPowers input:checked'), function(i){ return i.value; });
+  if (!name || name.toLowerCase() === 'juicygv' || admins.some(function(a){ return a.name.toLowerCase() === name.toLowerCase(); })) { $('#aOut').textContent = 'Pick a username nobody else is using.'; return; }
+  if (!powers.length) { $('#aOut').textContent = 'Tick at least one thing they are allowed to do.'; return; }
+  cred(name).then(function(c){ admins.push({name:name, salt:c.salt, hash:c.hash, powers:powers}); saveDraft(); listAdmins(); showKey(name, c.key); $('#aName').value = ''; });
+});
+$('#adminList').addEventListener('click', function(e){
+  var r = e.target.dataset.r, k = e.target.dataset.k;
+  if (r != null && confirm('Remove ' + admins[r].name + '?')) { admins.splice(r, 1); saveDraft(); listAdmins(); }
+  else if (k != null) { var a = admins[k]; cred(a.name).then(function(c){ a.salt = c.salt; a.hash = c.hash; saveDraft(); showKey(a.name, c.key); }); }
+});
+
+/* ---------- players ---------- */
+var openPid = null, editingPid = null, logoDraft = '';
+document.querySelector('.tabs').addEventListener('click', function(e){
+  var b = e.target.closest('[data-view]'); if (!b) return;
+  view = b.dataset.view;
+  document.querySelectorAll('.tab').forEach(function(t){ t.classList.toggle('on', t === b); });
+  $('#board').hidden = view !== 'maps'; $('#playersView').hidden = view !== 'players';
+});
+$('#players').addEventListener('click', function(e){
+  var row = e.target.closest('.row'), b = e.target.closest('[data-act]'); if (!row || !b) return;
+  if (b.dataset.act === 'ptoggle') { openPid = openPid === row.dataset.pid ? null : row.dataset.pid; renderPlayers(); }
+  else if (b.dataset.act === 'pedit' && can('players')) openPlayer(row.dataset.pid);
+});
+function openPlayer(id){
+  editingPid = id;
+  var p = id ? players.find(function(x){ return x.id === id; }) : {name:'', beaten:[]};
+  $('#plName').value = p.name;
+  $('#plMaps').innerHTML = maps.map(function(m){
+    return '<label class="chk"><input type="checkbox" value="' + m.id + '"' + (p.beaten.indexOf(m.id) > -1 ? ' checked' : '') + '> ' + esc(m.name) + ' <span class="by">' + pts(m) + ' pts</span></label>';
+  }).join('') || '<p class="by">Add some maps first.</p>';
+  $('#plDel').style.display = id ? '' : 'none';
+  $('#playerDlg').showModal();
+}
+$('#addPlayerBtn').addEventListener('click', function(){ openPlayer(null); });
+$('#playerForm').addEventListener('submit', function(e){
+  e.preventDefault();
+  var beaten = Array.prototype.map.call(document.querySelectorAll('#plMaps input:checked'), function(i){ return i.value; });
+  var name = $('#plName').value.trim() || 'Player';
+  if (editingPid) { var p = players.find(function(x){ return x.id === editingPid; }); p.name = name; p.beaten = beaten; }
+  else players.push({id:uid(), name:name, beaten:beaten});
+  saveDraft(); render(); $('#playerDlg').close(); toast('Player saved');
+});
+$('#plDel').addEventListener('click', function(){
+  if (!editingPid || !confirm('Delete this player?')) return;
+  players = players.filter(function(x){ return x.id !== editingPid; }); saveDraft(); render(); $('#playerDlg').close();
+});
+
+/* ---------- site settings ---------- */
+function setLogoPrev(){ $('#sPrev').style.backgroundImage = safeUrl(logoDraft) ? 'url("' + logoDraft.replace(/"/g, '%22') + '")' : ''; }
+$('#siteBtn').addEventListener('click', function(){
+  ['Title:title','Brand:brand','Small:small','Intro:intro','Foot1:foot1','Foot2:foot2','PIntro:playersIntro'].forEach(function(x){ var a = x.split(':'); $('#s' + a[0]).value = S(a[1]); });
+  $('#sWDiff').value = S('dwCp'); $('#sWBeat').value = S('dwRate'); $('#sWTime').value = S('dwLen'); $('#sWAge').value = S('dwAge'); $('#sAgeCap').value = S('ageCap'); $('#sCap').value = S('cpCap'); $('#sMult').value = S('pointsMult');
+  $('#sSbUrl').value = (site.sb && site.sb.url) || ''; $('#sSbKey').value = (site.sb && site.sb.key) || '';
+  $('#sAccent').value = site.accent || '#f0cf4a'; $('#sAccentDef').checked = !site.accent;
+  logoDraft = site.logo || ''; setLogoPrev(); $('#sLogoFile').value = '';
+  $('#siteDlg').showModal();
+});
+$('#sLogoReset').addEventListener('click', function(){ logoDraft = ''; $('#sLogoFile').value = ''; setLogoPrev(); });
+$('#sLogoFile').addEventListener('change', function(){
+  var f = this.files[0]; if (!f) return;
+  var img = new Image(), url = URL.createObjectURL(f);
+  img.onload = function(){
+    var k = Math.min(1, 192 / Math.max(img.width, img.height)), c = document.createElement('canvas');
+    c.width = Math.round(img.width * k); c.height = Math.round(img.height * k);
+    c.getContext('2d').drawImage(img, 0, 0, c.width, c.height);
+    logoDraft = c.toDataURL('image/png'); setLogoPrev(); URL.revokeObjectURL(url);
+  };
+  img.src = url;
+});
+$('#sTest').addEventListener('click', function(){
+  var url = cleanSb($('#sSbUrl').value), key = $('#sSbKey').value.trim(), out = $('#sTestOut'), say = [];
+  if (!/^https:\/\//.test(url) || !key) { out.textContent = 'Fill in both the URL and the key first.'; return; }
+  var h = {apikey:key}; if (!/^sb_/.test(key)) h.Authorization = 'Bearer ' + key;
+  out.textContent = 'Testing…';
+  fetch(url + '/auth/v1/settings', {headers:h}).then(function(r){ return r.json().catch(function(){ return {}; }).then(function(j){ return {ok:r.ok, st:r.status, j:j}; }); })
+    .then(function(a){
+      if (!a.ok) { say.push('Reached Supabase, but the key was refused (' + a.st + '). Copy the anon or publishable key again, with no spaces, and not the secret one.'); return; }
+      say.push('Reached Supabase and the key works.');
+      if (a.j.mailer_autoconfirm === true) say.push('Email confirmation is off. Good.');
+      else if (a.j.mailer_autoconfirm === false) say.push('Email confirmation is still ON, so new accounts need an email link. Turn off Confirm email under Authentication, Sign In / Providers, Email.');
+      return fetch(url + '/rest/v1/comments?select=id&limit=1', {headers:h}).then(function(r){
+        say.push(r.ok ? 'The comments table exists. Good.' : 'The comments table was not found (' + r.status + '). Run comments-setup.sql in the SQL Editor.');
+      });
+    })
+    .catch(function(e){ say.push('This page could not connect (' + e.message + '). Your browser reached Supabase in a normal tab, so something is blocking this page: an extension, a preview window instead of the real site address, or a typo in the URL box.'); })
+    .then(function(){ out.textContent = say.join(' '); });
+});
+$('#siteForm').addEventListener('submit', function(e){
+  e.preventDefault();
+  site = {title:$('#sTitle').value.trim(), brand:$('#sBrand').value.trim(), small:$('#sSmall').value.trim(), intro:$('#sIntro').value.trim(),
+    foot1:$('#sFoot1').value.trim(), foot2:$('#sFoot2').value.trim(), playersIntro:$('#sPIntro').value.trim(), logo:logoDraft,
+    accent:$('#sAccentDef').checked ? '' : $('#sAccent').value,
+    dwCp:num($('#sWDiff').value, 1), dwRate:num($('#sWBeat').value, 1), dwLen:num($('#sWTime').value, 0.25), dwAge:num($('#sWAge').value, 1), ageCap:num($('#sAgeCap').value, 100), cpCap:num($('#sCap').value, 10), pointsMult:num($('#sMult').value, 1),
+    sb:{url:cleanSb($('#sSbUrl').value), key:$('#sSbKey').value.trim()}};
+  saveDraft(); render(); $('#siteDlg').close(); toast('Settings saved');
+});
+
+/* ---------- dark / light ---------- */
+function curTheme(){ return document.documentElement.dataset.theme || (matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark'); }
+function paintTheme(){ $('#themeBtn').textContent = curTheme() === 'light' ? 'Dark mode' : 'Light mode'; }
+$('#themeBtn').addEventListener('click', function(){
+  var t = curTheme() === 'light' ? 'dark' : 'light'; document.documentElement.dataset.theme = t;
+  try { localStorage.setItem('ugh-theme', t); } catch(e){} paintTheme();
+});
+paintTheme();
+
+/* ---------- accounts and comments (Supabase) ---------- */
+var SB_SESS = 'ugh-sb-v1', sess = null, cm = {}, cmOpen = null, cmReply = null, acctMode = 'in';
+try { sess = JSON.parse(localStorage.getItem(SB_SESS) || 'null'); } catch(e){}
+function cleanSb(u){ u = u.trim(); try { return new URL(u).origin; } catch(e){ return u; } }
+function sbOn(){ return !!(site.sb && /^https:\/\//.test(site.sb.url || '') && site.sb.key); }
+function applyAcct(){ var b = $('#acctBtn'); b.style.display = sbOn() ? '' : 'none'; b.textContent = sess ? sess.username : 'Sign in'; }
+function sbReq(path, o){
+  o = o || {};
+  var h = {apikey:site.sb.key, 'Content-Type':'application/json'};
+  if (o.auth) h.Authorization = 'Bearer ' + sess.access_token;
+  else if (!/^sb_/.test(site.sb.key)) h.Authorization = 'Bearer ' + site.sb.key; // newer "publishable" keys go in apikey only
+  return fetch(cleanSb(site.sb.url) + path, {method:o.method || 'GET', headers:h, body:o.body ? JSON.stringify(o.body) : undefined}).then(function(r){
+    return r.text().then(function(t){
+      var j = null; try { j = t ? JSON.parse(t) : null; } catch(e){}
+      if (!r.ok) throw new Error((j && (j.msg || j.message || j.error_description || j.error)) || 'Something went wrong (' + r.status + ').');
+      return j;
+    });
+  }, function(){ throw new Error('Cannot reach Supabase. Check the Project URL in Site settings (it should look like https://abcdxyz.supabase.co) and that an ad blocker is not blocking it.'); });
+}
+function keepSess(){ try { sess ? localStorage.setItem(SB_SESS, JSON.stringify(sess)) : localStorage.removeItem(SB_SESS); } catch(e){} applyAcct(); }
+function takeSession(j){
+  sess = {access_token:j.access_token, refresh_token:j.refresh_token, expires_at:j.expires_at || (Math.floor(Date.now() / 1000) + (j.expires_in || 3600)),
+    uid:j.user.id, username:(j.user.user_metadata && j.user.user_metadata.username) || 'you', mod:false};
+  keepSess();
+  return sbReq('/rest/v1/profiles?id=eq.' + sess.uid + '&select=username,is_mod').then(function(p){
+    if (p && p[0]) { sess.username = p[0].username; sess.mod = !!p[0].is_mod; keepSess(); }
+  }).catch(function(){});
+}
+function fresh(){
+  if (!sess) return Promise.reject(new Error('Sign in first.'));
+  if (sess.expires_at * 1000 > Date.now() + 30000) return Promise.resolve();
+  return sbReq('/auth/v1/token?grant_type=refresh_token', {method:'POST', body:{refresh_token:sess.refresh_token}}).then(takeSession)
+    .catch(function(){ sess = null; keepSess(); throw new Error('Your sign-in ran out. Please sign in again.'); });
+}
+function openAcct(m){
+  acctMode = m; var up = m === 'up';
+  $('#acctTitle').textContent = up ? 'Create an account' : 'Sign in';
+  $('#acctGo').textContent = up ? 'Create account' : 'Sign in';
+  $('#acctSwitch').textContent = up ? 'I already have an account' : 'Create an account instead';
+  $('#acctUserWrap').style.display = up ? '' : 'none'; $('#acctErr').textContent = '';
+  $('#acctDlg').showModal();
+}
+$('#acctBtn').addEventListener('click', function(){
+  if (!sess) return openAcct('in');
+  if (confirm('Sign out of ' + sess.username + '?')) { sess = null; keepSess(); drawComments(); }
+});
+$('#acctSwitch').addEventListener('click', function(){ openAcct(acctMode === 'in' ? 'up' : 'in'); });
+$('#acctForm').addEventListener('submit', function(e){
+  e.preventDefault();
+  var email = $('#acctEmail').value.trim(), pw = $('#acctPw').value, user = $('#acctUser').value.trim(), up = acctMode === 'up', err = $('#acctErr');
+  if (up && !/^[A-Za-z0-9_.-]{3,24}$/.test(user)) { err.textContent = 'Usernames are 3 to 24 letters, numbers, dots, dashes or underscores.'; return; }
+  err.textContent = '';
+  var req = up ? sbReq('/auth/v1/signup', {method:'POST', body:{email:email, password:pw, data:{username:user}}})
+               : sbReq('/auth/v1/token?grant_type=password', {method:'POST', body:{email:email, password:pw}});
+  req.then(function(j){
+    if (j && j.access_token) return takeSession(j).then(function(){ $('#acctDlg').close(); drawComments(); toast('Signed in as ' + sess.username); });
+    $('#acctDlg').close(); toast('Check your email to confirm the account, then sign in.');
+  }).catch(function(x){ err.textContent = x.message + (up && /database/i.test(x.message) ? ' (That username may already be taken.)' : ''); });
+});
+
+function loadComments(id){
+  cm[id] = 'loading'; drawComments();
+  sbReq('/rest/v1/comments?map_id=eq.' + encodeURIComponent(id) + '&select=id,parent_id,user_id,body,created_at,profiles(username)&order=created_at.asc')
+    .then(function(r){ cm[id] = r || []; }).catch(function(x){ cm[id] = 'Could not load comments: ' + x.message; }).then(drawComments);
+}
+function cmThread(list, pid, depth){
+  return list.filter(function(c){ return (c.parent_id || null) === pid; }).map(function(c){
+    var mine = sess && (sess.uid === c.user_id || sess.mod);
+    return '<div class="cm" style="margin-left:' + Math.min(depth, 4) * 18 + 'px"><span class="who">' + esc((c.profiles && c.profiles.username) || 'someone') + '</span><span class="when">' +
+      new Date(c.created_at).toLocaleDateString(undefined, {month:'short', day:'numeric', year:'numeric'}) + '</span><p>' + esc(c.body) + '</p><div class="acts">' +
+      (sess ? '<button class="btn small" type="button" data-act="creply" data-cid="' + c.id + '">Reply</button>' : '') +
+      (mine ? '<button class="btn small danger" type="button" data-act="cdel" data-cid="' + c.id + '">Delete</button>' : '') + '</div>' +
+      (cmReply === c.id ? '<div class="cmform"><textarea data-cin="r" maxlength="1000" placeholder="Write a reply"></textarea><div><button class="btn small primary" type="button" data-act="csend" data-cid="' + c.id + '">Send reply</button></div></div>' : '') +
+      '</div>' + cmThread(list, c.id, depth + 1);
+  }).join('');
+}
+function drawComments(){
+  var el = document.querySelector('.cmts'); if (!el) return;
+  var st = cm[el.dataset.cm], old = el.querySelector('[data-cin=t]'), draft = old ? old.value : '', h;
+  if (!sbOn()) h = '<p class="by">Comments are not switched on yet.' + (isAdmin ? ' Add the Supabase details under Site settings.' : '') + '</p>';
+  else h = (sess
+      ? '<div class="cmform"><textarea data-cin="t" maxlength="1000" placeholder="Write a comment as ' + esc(sess.username) + '"></textarea><div><button class="btn small primary" type="button" data-act="cpost">Post comment</button></div></div>'
+      : '<p class="by">You need an account to comment. <button class="btn small" type="button" data-act="csign">Sign in or create one</button></p>') +
+    (st == null || st === 'loading' ? '<p class="by">Loading…</p>' : typeof st === 'string' ? '<p class="err">' + esc(st) + '</p>' : st.length ? cmThread(st, null, 0) : '<p class="by">No comments yet. Be the first.</p>');
+  el.innerHTML = h;
+  var t = el.querySelector('[data-cin=t]'); if (t) t.value = draft;
+}
+function commentAct(act, btn, id){
+  var cid = parseInt(btn.dataset.cid, 10), row = btn.closest('.row');
+  if (act === 'comments') { cmOpen = cmOpen === id ? null : id; cmReply = null; render(); if (cmOpen && sbOn()) loadComments(id); return; }
+  if (act === 'csign') return openAcct('in');
+  if (act === 'creply') { cmReply = cmReply === cid ? null : cid; return drawComments(); }
+  if (act === 'cpost' || act === 'csend') {
+    var ta = row.querySelector(act === 'cpost' ? '[data-cin=t]' : '[data-cin=r]'), body = ta ? ta.value.trim() : ''; if (!body) return;
+    btn.disabled = true;
+    return fresh().then(function(){ return sbReq('/rest/v1/comments', {method:'POST', auth:true, body:{map_id:id, parent_id:act === 'csend' ? cid : null, body:body}}); })
+      .then(function(){ cmReply = null; ta.value = ''; loadComments(id); })
+      .catch(function(x){ btn.disabled = false; toast(x.message); });
+  }
+  if (act === 'cdel' && confirm('Delete this comment? Replies to it go too.'))
+    fresh().then(function(){ return sbReq('/rest/v1/comments?id=eq.' + cid, {method:'DELETE', auth:true}); })
+      .then(function(){ loadComments(id); }).catch(function(x){ toast(x.message); });
+}
+$('#board').addEventListener('mousedown', function(e){ var r = e.target.closest('.row'); if (r) r.draggable = !e.target.closest('.cmts') && can('reorder'); });
+
+/* ---------- start ---------- */
+load().then(function(){
+  try { var s = JSON.parse(sessionStorage.getItem(SESSION_KEY) || 'null');
+    if (s && s.o) setAdmin({name:s.n, owner:true, powers:[]});
+    else if (s && s.n) setAdmin(admins.find(function(a){ return a.name === s.n; })); } catch(e){}
+});
+})();
+</script>
+</body>
+</html>
